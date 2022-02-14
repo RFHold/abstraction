@@ -1,0 +1,12 @@
+syntax = "proto3";
+package messages.v1;
+
+message MessageFrame {
+  string id = 1;
+  string content = 2;
+  string date = 3;
+}
+
+service Message {
+  rpc StreamMessages (stream MessageFrame) returns (stream MessageFrame);
+}
