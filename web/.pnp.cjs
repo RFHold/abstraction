@@ -42,6 +42,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/jest-dom", "npm:5.16.2"],
             ["@testing-library/react", "virtual:5f667c73984ed00ed0af2d2ee5bb7487501bcb7981faa0f3174f6b4e10779d128272858d90e1bd616db7bd20b70e6922af9582ba35aeace0a368e003ee8b65c2#npm:12.1.2"],
             ["@testing-library/user-event", "virtual:5f667c73984ed00ed0af2d2ee5bb7487501bcb7981faa0f3174f6b4e10779d128272858d90e1bd616db7bd20b70e6922af9582ba35aeace0a368e003ee8b65c2#npm:13.5.0"],
+            ["@types/google-protobuf", "npm:3.15.5"],
             ["@types/react", "npm:17.0.39"],
             ["@types/react-dom", "npm:17.0.11"],
             ["@typescript-eslint/eslint-plugin", "virtual:5f667c73984ed00ed0af2d2ee5bb7487501bcb7981faa0f3174f6b4e10779d128272858d90e1bd616db7bd20b70e6922af9582ba35aeace0a368e003ee8b65c2#npm:5.12.0"],
@@ -54,6 +55,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-prettier", "virtual:5f667c73984ed00ed0af2d2ee5bb7487501bcb7981faa0f3174f6b4e10779d128272858d90e1bd616db7bd20b70e6922af9582ba35aeace0a368e003ee8b65c2#npm:4.0.0"],
             ["eslint-plugin-react", "virtual:5f667c73984ed00ed0af2d2ee5bb7487501bcb7981faa0f3174f6b4e10779d128272858d90e1bd616db7bd20b70e6922af9582ba35aeace0a368e003ee8b65c2#npm:7.28.0"],
             ["eslint-plugin-simple-import-sort", "virtual:5f667c73984ed00ed0af2d2ee5bb7487501bcb7981faa0f3174f6b4e10779d128272858d90e1bd616db7bd20b70e6922af9582ba35aeace0a368e003ee8b65c2#npm:7.0.0"],
+            ["google-protobuf", "npm:3.19.4"],
+            ["grpc-web", "npm:1.3.1"],
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jest", "virtual:5f667c73984ed00ed0af2d2ee5bb7487501bcb7981faa0f3174f6b4e10779d128272858d90e1bd616db7bd20b70e6922af9582ba35aeace0a368e003ee8b65c2#npm:27.5.1"],
             ["pre-commit", "npm:1.2.2"],
@@ -3237,6 +3240,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@types/google-protobuf", [
+        ["npm:3.15.5", {
+          "packageLocation": "./.yarn/cache/@types-google-protobuf-npm-3.15.5-2abce93017-43f52df3b5.zip/node_modules/@types/google-protobuf/",
+          "packageDependencies": [
+            ["@types/google-protobuf", "npm:3.15.5"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@types/graceful-fs", [
         ["npm:4.1.5", {
           "packageLocation": "./.yarn/cache/@types-graceful-fs-npm-4.1.5-91d62e1050-d076bb61f4.zip/node_modules/@types/graceful-fs/",
@@ -5974,11 +5986,29 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["google-protobuf", [
+        ["npm:3.19.4", {
+          "packageLocation": "./.yarn/cache/google-protobuf-npm-3.19.4-78e4b2e88b-c0ebc0afbb.zip/node_modules/google-protobuf/",
+          "packageDependencies": [
+            ["google-protobuf", "npm:3.19.4"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["graceful-fs", [
         ["npm:4.2.9", {
           "packageLocation": "./.yarn/cache/graceful-fs-npm-4.2.9-ee48e00aaa-68ea4e07ff.zip/node_modules/graceful-fs/",
           "packageDependencies": [
             ["graceful-fs", "npm:4.2.9"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["grpc-web", [
+        ["npm:1.3.1", {
+          "packageLocation": "./.yarn/cache/grpc-web-npm-1.3.1-cc3e2d2756-4a423f467f.zip/node_modules/grpc-web/",
+          "packageDependencies": [
+            ["grpc-web", "npm:1.3.1"]
           ],
           "linkType": "HARD",
         }]
@@ -9482,6 +9512,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/jest-dom", "npm:5.16.2"],
             ["@testing-library/react", "virtual:5f667c73984ed00ed0af2d2ee5bb7487501bcb7981faa0f3174f6b4e10779d128272858d90e1bd616db7bd20b70e6922af9582ba35aeace0a368e003ee8b65c2#npm:12.1.2"],
             ["@testing-library/user-event", "virtual:5f667c73984ed00ed0af2d2ee5bb7487501bcb7981faa0f3174f6b4e10779d128272858d90e1bd616db7bd20b70e6922af9582ba35aeace0a368e003ee8b65c2#npm:13.5.0"],
+            ["@types/google-protobuf", "npm:3.15.5"],
             ["@types/react", "npm:17.0.39"],
             ["@types/react-dom", "npm:17.0.11"],
             ["@typescript-eslint/eslint-plugin", "virtual:5f667c73984ed00ed0af2d2ee5bb7487501bcb7981faa0f3174f6b4e10779d128272858d90e1bd616db7bd20b70e6922af9582ba35aeace0a368e003ee8b65c2#npm:5.12.0"],
@@ -9494,6 +9525,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-prettier", "virtual:5f667c73984ed00ed0af2d2ee5bb7487501bcb7981faa0f3174f6b4e10779d128272858d90e1bd616db7bd20b70e6922af9582ba35aeace0a368e003ee8b65c2#npm:4.0.0"],
             ["eslint-plugin-react", "virtual:5f667c73984ed00ed0af2d2ee5bb7487501bcb7981faa0f3174f6b4e10779d128272858d90e1bd616db7bd20b70e6922af9582ba35aeace0a368e003ee8b65c2#npm:7.28.0"],
             ["eslint-plugin-simple-import-sort", "virtual:5f667c73984ed00ed0af2d2ee5bb7487501bcb7981faa0f3174f6b4e10779d128272858d90e1bd616db7bd20b70e6922af9582ba35aeace0a368e003ee8b65c2#npm:7.0.0"],
+            ["google-protobuf", "npm:3.19.4"],
+            ["grpc-web", "npm:1.3.1"],
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jest", "virtual:5f667c73984ed00ed0af2d2ee5bb7487501bcb7981faa0f3174f6b4e10779d128272858d90e1bd616db7bd20b70e6922af9582ba35aeace0a368e003ee8b65c2#npm:27.5.1"],
             ["pre-commit", "npm:1.2.2"],

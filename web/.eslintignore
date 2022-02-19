@@ -4,3 +4,7 @@ dist
 dist-ssr
 *.local
 node_modules/*
+.yarn
+.yarn/*
+/src/lib/api
+/src/lib/api/*

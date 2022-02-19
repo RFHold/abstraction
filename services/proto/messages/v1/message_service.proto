@@ -7,6 +7,6 @@ message MessageFrame {
   string date = 3;
 }
 
-service Message {
+service MessageService {
   rpc StreamMessages (stream MessageFrame) returns (stream MessageFrame);
 }
