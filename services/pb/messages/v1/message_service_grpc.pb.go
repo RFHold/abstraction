@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -22,7 +23,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MessageServiceClient interface {
-	StreamMessages(ctx context.Context, opts ...grpc.CallOption) (MessageService_StreamMessagesClient, error)
+	StreamMessages(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (MessageService_StreamMessagesClient, error)
+	CreateMessage(ctx context.Context, in *CreateMessageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type messageServiceClient struct {
@@ -33,18 +35,23 @@ func NewMessageServiceClient(cc grpc.ClientConnInterface) MessageServiceClient {
 	return &messageServiceClient{cc}
 }
 
-func (c *messageServiceClient) StreamMessages(ctx context.Context, opts ...grpc.CallOption) (MessageService_StreamMessagesClient, error) {
+func (c *messageServiceClient) StreamMessages(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (MessageService_StreamMessagesClient, error) {
 	stream, err := c.cc.NewStream(ctx, &MessageService_ServiceDesc.Streams[0], "/messages.v1.MessageService/StreamMessages", opts...)
 	if err != nil {
 		return nil, err
 	}
 	x := &messageServiceStreamMessagesClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
 	return x, nil
 }
 
 type MessageService_StreamMessagesClient interface {
-	Send(*MessageFrame) error
-	Recv() (*MessageFrame, error)
+	Recv() (*StreamMessagesResponse, error)
 	grpc.ClientStream
 }
 
@@ -52,23 +59,29 @@ type messageServiceStreamMessagesClient struct {
 	grpc.ClientStream
 }
 
-func (x *messageServiceStreamMessagesClient) Send(m *MessageFrame) error {
-	return x.ClientStream.SendMsg(m)
-}
-
-func (x *messageServiceStreamMessagesClient) Recv() (*MessageFrame, error) {
-	m := new(MessageFrame)
+func (x *messageServiceStreamMessagesClient) Recv() (*StreamMessagesResponse, error) {
+	m := new(StreamMessagesResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
 	return m, nil
 }
 
+func (c *messageServiceClient) CreateMessage(ctx context.Context, in *CreateMessageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/messages.v1.MessageService/CreateMessage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MessageServiceServer is the server API for MessageService service.
 // All implementations must embed UnimplementedMessageServiceServer
 // for forward compatibility
 type MessageServiceServer interface {
-	StreamMessages(MessageService_StreamMessagesServer) error
+	StreamMessages(*emptypb.Empty, MessageService_StreamMessagesServer) error
+	CreateMessage(context.Context, *CreateMessageRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedMessageServiceServer()
 }
 
@@ -76,8 +89,11 @@ type MessageServiceServer interface {
 type UnimplementedMessageServiceServer struct {
 }
 
-func (UnimplementedMessageServiceServer) StreamMessages(MessageService_StreamMessagesServer) error {
+func (UnimplementedMessageServiceServer) StreamMessages(*emptypb.Empty, MessageService_StreamMessagesServer) error {
 	return status.Errorf(codes.Unimplemented, "method StreamMessages not implemented")
+}
+func (UnimplementedMessageServiceServer) CreateMessage(context.Context, *CreateMessageRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateMessage not implemented")
 }
 func (UnimplementedMessageServiceServer) mustEmbedUnimplementedMessageServiceServer() {}
 
@@ -93,12 +109,15 @@ func RegisterMessageServiceServer(s grpc.ServiceRegistrar, srv MessageServiceSer
 }
 
 func _MessageService_StreamMessages_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(MessageServiceServer).StreamMessages(&messageServiceStreamMessagesServer{stream})
+	m := new(emptypb.Empty)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(MessageServiceServer).StreamMessages(m, &messageServiceStreamMessagesServer{stream})
 }
 
 type MessageService_StreamMessagesServer interface {
-	Send(*MessageFrame) error
-	Recv() (*MessageFrame, error)
+	Send(*StreamMessagesResponse) error
 	grpc.ServerStream
 }
 
@@ -106,16 +125,26 @@ type messageServiceStreamMessagesServer struct {
 	grpc.ServerStream
 }
 
-func (x *messageServiceStreamMessagesServer) Send(m *MessageFrame) error {
+func (x *messageServiceStreamMessagesServer) Send(m *StreamMessagesResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func (x *messageServiceStreamMessagesServer) Recv() (*MessageFrame, error) {
-	m := new(MessageFrame)
-	if err := x.ServerStream.RecvMsg(m); err != nil {
+func _MessageService_CreateMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateMessageRequest)
+	if err := dec(in); err != nil {
 		return nil, err
 	}
-	return m, nil
+	if interceptor == nil {
+		return srv.(MessageServiceServer).CreateMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/messages.v1.MessageService/CreateMessage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MessageServiceServer).CreateMessage(ctx, req.(*CreateMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 // MessageService_ServiceDesc is the grpc.ServiceDesc for MessageService service.
@@ -124,13 +153,17 @@ func (x *messageServiceStreamMessagesServer) Recv() (*MessageFrame, error) {
 var MessageService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "messages.v1.MessageService",
 	HandlerType: (*MessageServiceServer)(nil),
-	Methods:     []grpc.MethodDesc{},
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateMessage",
+			Handler:    _MessageService_CreateMessage_Handler,
+		},
+	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "StreamMessages",
 			Handler:       _MessageService_StreamMessages_Handler,
 			ServerStreams: true,
-			ClientStreams: true,
 		},
 	},
 	Metadata: "messages/v1/message_service.proto",

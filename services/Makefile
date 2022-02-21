@@ -6,37 +6,71 @@ idg=$(shell id -g)
 
 BUF_IMAGE=bufbuild/buf:1.0.0
 BUF_WRK=$(shell cd .. && pwd)
+BUF_WRK_SERVICES=services
+BUF_IMG=buf-image
 
-install:
-	docker build docker/buf/ -t abstraction-buf
+GOOSE_DIR=./schema
+GOOSE_DB_STRING='user=abstraction password=secret dbname=abstraction port=5432 host=localhost sslmode=disable'
+GOOSE_CMD=goose postgres $(GOOSE_DB_STRING)
 
-db-up:
+COMPOSE_FILE=./docker/docker-compose.yaml
 
-db-down:
+install-tools:
+	go install golang.org/x/lint/golint
 
-db-reset:
+goose-up:
+	cd $(GOOSE_DIR)/migrations && $(GOOSE_CMD) up
+
+goose-redo:
+	cd $(GOOSE_DIR)/migrations && $(GOOSE_CMD) redo
+
+goose-down:
+	cd $(GOOSE_DIR)/migrations && $(GOOSE_CMD) down
+
+goose-status:
+	cd $(GOOSE_DIR)/migrations && $(GOOSE_CMD) status
+
+goose-fix:
+	cd $(GOOSE_DIR)/migrations && goose fix
+	cd $(GOOSE_DIR)/seeds && goose fix
+
+goose-reset:
+	cd $(GOOSE_DIR)/seeds && $(GOOSE_CMD) reset -no-versioning
+	cd $(GOOSE_DIR)/migrations && $(GOOSE_CMD) reset
+
+goose-seed:
+	cd $(GOOSE_DIR)/seeds && $(GOOSE_CMD) up -no-versioning
 
 run:
+	docker compose -f $(COMPOSE_FILE) up
+
+dev:
+	docker compose -f $(COMPOSE_FILE) up postgres redis rabbitmq
 
 buf:
 	rm -rf pb/*
 	rm -rf ../web/src/lib/api/*
-	docker run --volume "$(BUF_WRK):/wrk" -w /wrk/services $(BUF_IMAGE) build -o buf-image.json
-	docker run --volume "$(BUF_WRK):/wrk" -w /wrk/services $(BUF_IMAGE) generate proto
+	docker run --volume "$(BUF_WRK):/wrk" -w /wrk/$(BUF_WRK_SERVICES) $(BUF_IMAGE) build -o $(BUF_IMG)
+	docker run --volume "$(BUF_WRK):/wrk" -w /wrk/$(BUF_WRK_SERVICES) $(BUF_IMAGE) generate proto
 
 buf-ls:
-	docker run --volume "$(BUF_WRK):/wrk" -w /wrk/services $(BUF_IMAGE) ls-files
+	docker run --volume "$(BUF_WRK):/wrk" -w /wrk/$(BUF_WRK_SERVICES) $(BUF_IMAGE) ls-files
 
 buf-lint:
-	docker run --volume "$(BUF_WRK):/wrk" -w /wrk/services $(BUF_IMAGE) lint
+	docker run --volume "$(BUF_WRK):/wrk" -w /wrk/$(BUF_WRK_SERVICES) $(BUF_IMAGE) lint
 
 buf-breaking:
-	docker run --volume "$(BUF_WRK):/wrk" -w /wrk/services $(BUF_IMAGE) breaking --against buf-image.json
+	docker run --volume "$(BUF_WRK):/wrk" -w /wrk/$(BUF_WRK_SERVICES) $(BUF_IMAGE) breaking --against $(BUF_IMG)
 
 test:
 
-seed:
+fmt:
+	go fmt ./
 
-seed-e2e:
+vet:
+	go vet ./
 
-seed-test:
+lint:
+	golint ./
+
+build:

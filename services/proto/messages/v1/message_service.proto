@@ -1,12 +1,19 @@
 syntax = "proto3";
+import "google/protobuf/empty.proto";
+
 package messages.v1;
 
-message MessageFrame {
+message StreamMessagesResponse {
   string id = 1;
   string content = 2;
   string date = 3;
 }
 
+message CreateMessageRequest {
+  string content = 1;
+}
+
 service MessageService {
-  rpc StreamMessages (stream MessageFrame) returns (stream MessageFrame);
+  rpc StreamMessages (google.protobuf.Empty) returns (stream StreamMessagesResponse);
+  rpc CreateMessage (CreateMessageRequest) returns (google.protobuf.Empty);
 }
