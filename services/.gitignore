@@ -1,0 +1,3 @@
+bin/*
+bin
+/cmd/messages/.env.local

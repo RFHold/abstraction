@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="messages service" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="abstraction" />
+    <working_directory value="$PROJECT_DIR$/services/cmd/messages" />
+    <kind value="FILE" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/services/cmd/messages/main.go" />
+    <method v="2" />
+  </configuration>
+</component>

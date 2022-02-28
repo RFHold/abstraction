@@ -15,8 +15,8 @@ GOOSE_CMD=goose postgres $(GOOSE_DB_STRING)
 
 COMPOSE_FILE=./docker/docker-compose.yaml
 
-install-tools:
-	go install golang.org/x/lint/golint
+install:
+	go install github.com/pressly/goose/v3/cmd/goose@latest
 
 goose-up:
 	cd $(GOOSE_DIR)/migrations && $(GOOSE_CMD) up
@@ -44,6 +44,9 @@ goose-seed:
 run:
 	docker compose -f $(COMPOSE_FILE) up
 
+run-messages:
+	cd cmd/messages && go run main.go
+
 dev:
 	docker compose -f $(COMPOSE_FILE) up postgres redis rabbitmq
 
@@ -63,14 +66,13 @@ buf-breaking:
 	docker run --volume "$(BUF_WRK):/wrk" -w /wrk/$(BUF_WRK_SERVICES) $(BUF_IMAGE) breaking --against $(BUF_IMG)
 
 test:
+	go test ./...
 
 fmt:
-	go fmt ./
+	go fmt ./...
 
 vet:
-	go vet ./
-
-lint:
-	golint ./
+	go vet ./...
 
 build:
+	go build -o bin/messages cmd/messages/main.go
